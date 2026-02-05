@@ -16,13 +16,12 @@ class DataLoader:
         X_train_full = X_train_full.astype('float32') / 255.0
         self.X_test = self.X_test.astype('float32') / 255.0
 
-        # 3. Creem el Validation Set a partir del Train (Separació Train/Val)
         self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(
             X_train_full, 
             y_train_full, 
             test_size=self.val_split, 
             random_state=self.seed,
-            stratify=y_train_full # Assegura que hi hagi la mateixa proporció de roba a train i val
+            stratify=y_train_full
         )
         
         print(f"✅ Dades carregades: Train={self.X_train.shape}, Val={self.X_val.shape}, Test={self.X_test.shape}")
