@@ -11,7 +11,6 @@ from .base_model import GreenModel
 layers = tf.keras.layers
 models = tf.keras.models
 
-# --- CLASSE INTERMÈDIA PER A SKLEARN ---
 class SklearnBase(GreenModel):
     def __init__(self, model, name):
         super().__init__(name)
@@ -30,7 +29,6 @@ class SklearnBase(GreenModel):
         # Estimació ràpida en bytes usant pickle
         return len(pickle.dumps(self.model))
 
-# --- CLASSE INTERMÈDIA PER A KERAS/TENSORFLOW ---
 class KerasBase(GreenModel):
     def __init__(self, model, name, epochs=5, batch_size=64):
         super().__init__(name)
@@ -40,8 +38,6 @@ class KerasBase(GreenModel):
         self.model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
     def fit(self, X, y):
-        # Keras necessita validació durant l'entrenament, però aquí ho simplifiquem
-        # Assumim que X ja té la forma correcta
         self.model.fit(X, y, epochs=self.epochs, batch_size=self.batch_size, verbose=0)
 
     def predict(self, X):
@@ -59,20 +55,17 @@ class KerasBase(GreenModel):
 # 1. TINY: Arbre de Decisió (El més simple possible)
 class TinyModel(SklearnBase):
     def __init__(self):
-        # Limitem profunditat per mantenir-lo "Green"
         super().__init__(DecisionTreeClassifier(max_depth=5), "Tiny (DTree)")
 
 # 2. SMALL: Regressió Logística (Limitada)
 class SmallModel(SklearnBase):
     def __init__(self):
-        # max_iter elevat per assegurar convergència
         super().__init__(LogisticRegression(max_iter=1000), "Small (LogReg)")
         
 
 # 3. MEDIUM: Random Forest (Ensemble petit)
 class MediumModel(SklearnBase):
     def __init__(self):
-        # 20 arbres, profunditat 10. Punt mig perfecte.
         super().__init__(RandomForestClassifier(n_estimators=20, max_depth=10), "Medium (RForest)")
 
 # 4. LARGE: MLP (Xarxa Neuronal Simple)
