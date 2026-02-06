@@ -3,6 +3,14 @@ from ..model_pool import SklearnBase, KerasBase
 from ..energy import EnergyMeter
 
 class GreenCascading:
+    COSTS = {
+        "Tiny": 0.0539 / 10000,    # DTree:  0.00000539 J
+        "Medium": 0.0550 / 10000,  # RForest: 0.00000550 J (Empat tècnic amb Tiny!)
+        "Small": 0.1260 / 10000,   # LogReg: 0.00001260 J
+        "Large": 0.4192 / 10000,   # MLP:    0.00004192 J
+        "Extra": 1.4224 / 10000    # CNN:    0.00014224 J
+    }
+
     def __init__(self, models_list, thresholds):
         """
         :param models_list: Llista d'objectes model JA ENTRENATS.
@@ -29,21 +37,15 @@ class GreenCascading:
             else:
                 x_input = x_img.reshape(1, 28, 28, 1)
 
-            with EnergyMeter() as meter:
-                probs = model.predict_proba(x_input)
+            probs = model.predict_proba(x_input)
             
-            # Sumem el cost d'aquest pas
-            # NOTA: CodeCarbon té un overhead alt per mesures tan petites (ms).
-            # En una simulació real, sumariem el cost mitjà que hem trobat al benchmark.
-            # Però aquí farem servir la lectura real (compte, serà sorollosa).
-            total_energy += meter.energy_kwh * 3.6e6 # a Joules
+            model_key = model.name.split()[0] 
+            step_cost = self.COSTS.get(model_key, 0.1) 
+            total_energy += step_cost
 
-            # 3. Mirem la confiança (Max probability)
             confidence = np.max(probs)
             prediction = np.argmax(probs)
 
-            # 4. Decidim: Parem o seguim?
-            # Si la confiança supera el llindar O és l'últim model
             if confidence >= self.thresholds[i] or i == len(self.models) - 1:
                 return prediction, total_energy, i, confidence
         
@@ -62,8 +64,7 @@ class GreenCascading:
         # Avaluem mostra a mostra (simulació realista de flux d'entrada)
         n_samples = len(y_true)
         for idx in range(n_samples):
-            # Progres (opcional)
-            if idx % 1000 == 0: print(f".", end="", flush=True)
+            if idx % 1000 == 0: print(f"({idx})", end="", flush=True)
 
             pred, energy, model_idx, conf = self.predict_sample(
                 X_flat[idx], X_img[idx]

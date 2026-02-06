@@ -7,7 +7,7 @@ from src.strategies.cascading import GreenCascading
 # Carregar models guardats
 def load_models():
     models = []
-    names = ["Tiny", "Small", "Medium", "Large", "Extra"] 
+    names = ["Tiny", "Medium", "Large", "Extra"] 
     
     print("📂 Carregant models...")
     for name in names:
@@ -24,20 +24,19 @@ def load_models():
 
 def main():
     loader = DataLoader()
-    (X_test_flat, y_test), _, _ = loader.get_data(flatten=True) # Test set flat
-    _, _, (X_test_img, _) = loader.get_data(flatten=False)      # Test set img
-    # Només farem servir 500 mostres per no esperar hores (CodeCarbon és lent arrencant/parant)
-    limit = 500 
-    X_test_flat, X_test_img, y_test = X_test_flat[:limit], X_test_img[:limit], y_test[:limit]
+    _, _, (X_test_flat, y_test) = loader.get_data(flatten=True)  # Test set flat
+    _, _, (X_test_img, _) = loader.get_data(flatten=False)       # Test set img
+    
+    X_test_flat, X_test_img, y_test = X_test_flat, X_test_img, y_test
 
     models = load_models()
 
     # 2. Definir Estratègia (Llindars)
     # Provem una configuració agressiva
-    # Si l'Arbre té 80% seguretat -> Acceptem.
-    # Si RF té 70% seguretat -> Acceptem.
+    # Si l'Arbre té 90% seguretat -> Acceptem.
+    # Si RF té 80% seguretat -> Acceptem.
     # ...
-    thresholds = [0.8, 0.7, 0.7, 0.6, 0.0] 
+    thresholds = [0.9, 0.8, 0.7, 0.0]  # 4 thresholds per 4 models 
     
     cascade = GreenCascading(models, thresholds)
 
@@ -50,7 +49,7 @@ def main():
     print(f"Energia Mitjana/Mostra: {avg_energy:.6f} Joules")
     print("Distribució d'ús de models:")
     for i, model in enumerate(models):
-        perc = (counts[i] / limit) * 100
+        perc = (counts[i] / len(y_test)) * 100
         print(f"  - {model.name}: {counts[i]} vegades ({perc:.1f}%)")
 
 if __name__ == "__main__":
