@@ -11,6 +11,7 @@ class EnergyMeter:
     """
     def __init__(self, project_name="green_ai_replica"):
         # Guardem els logs en una carpeta temp per no molestar
+        os.makedirs("./logs_energy", exist_ok=True)
         self.tracker = EmissionsTracker(
             project_name=project_name, 
             output_dir="./logs_energy",

@@ -1,4 +1,4 @@
-./logs_energy/
-./save_models/
+logs_energy/
+saved_models/
 benchmark_plot.png
 benchmark_results.csv
