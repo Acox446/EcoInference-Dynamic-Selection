@@ -223,35 +223,9 @@ This implementation uses **Fashion-MNIST**, a dataset of Zalando's article image
 - `codecarbon` - Energy consumption tracking
 - `pyyaml` - Configuration parsing
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
 
-- Inspired by the Green AI movement and sustainable ML research
-- Fashion-MNIST dataset by [Zalando Research](https://github.com/zalandoresearch/fashion-mnist)
-- Energy tracking powered by [CodeCarbon](https://github.com/mlco2/codecarbon)
-
-## Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@software{ecoinference2024,
-  title = {EcoInference-Dynamic-Selection},
-  author = {Your Name},
-  year = {2024},
-  url = {https://github.com/yourusername/EcoInference-Dynamic-Selection}
-}
 ```
