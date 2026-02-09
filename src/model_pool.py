@@ -26,7 +26,7 @@ class SklearnBase(GreenModel):
         return self.model.predict_proba(X)
 
     def get_model_size(self):
-        # Estimació ràpida en bytes usant pickle
+        # Quick estimation in bytes using pickle
         return len(pickle.dumps(self.model))
 
 class KerasBase(GreenModel):
@@ -48,27 +48,27 @@ class KerasBase(GreenModel):
         return self.model(X, training=False).numpy()
 
     def get_model_size(self):
-        # Comptem paràmetres * 4 bytes (float32)
+        # Count parameters * 4 bytes (float32)
         return self.model.count_params() * 4
 
 
-# 1. TINY: Arbre de Decisió (El més simple possible)
+# 1. TINY: Decision Tree (Simplest possible)
 class TinyModel(SklearnBase):
     def __init__(self):
         super().__init__(DecisionTreeClassifier(max_depth=5), "Tiny (DTree)")
 
-# 2. SMALL: Regressió Logística (Limitada)
+# 2. SMALL: Logistic Regression (Limited)
 class SmallModel(SklearnBase):
     def __init__(self):
         super().__init__(LogisticRegression(max_iter=1000), "Small (LogReg)")
         
 
-# 3. MEDIUM: Random Forest (Ensemble petit)
+# 3. MEDIUM: Random Forest (Small ensemble)
 class MediumModel(SklearnBase):
     def __init__(self):
         super().__init__(RandomForestClassifier(n_estimators=20, max_depth=10), "Medium (RForest)")
 
-# 4. LARGE: MLP (Xarxa Neuronal Simple)
+# 4. LARGE: MLP (Simple Neural Network)
 class LargeModel(KerasBase):
     def __init__(self, input_shape=(28, 28, 1)):
         model = models.Sequential([
@@ -78,7 +78,7 @@ class LargeModel(KerasBase):
         ])
         super().__init__(model, "Large (MLP)", epochs=5)
 
-# 5. EXTRA LARGE: CNN (Convolucional)
+# 5. EXTRA LARGE: CNN (Convolutional)
 class ExtraLargeModel(KerasBase):
     def __init__(self, input_shape=(28, 28, 1)):
         model = models.Sequential([

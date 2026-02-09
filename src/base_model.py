@@ -3,7 +3,7 @@ import numpy as np
 
 class GreenModel(ABC):
     """
-    Model base per a models "verds" que volen ser eficients energèticament.
+    Base model for "green" models that aim to be energy efficient.
     """
     def __init__(self, name: str):
         self.name = name
@@ -11,23 +11,23 @@ class GreenModel(ABC):
 
     @abstractmethod
     def fit(self, X, y):
-        """Entrena el model amb les dades d'entrenament."""
+        """Trains the model with training data."""
         pass
 
     @abstractmethod
     def predict(self, X):
-        """Retorna la classe predita (un array d'enters)."""
+        """Returns the predicted class (an array of integers)."""
         pass
 
     @abstractmethod
     def predict_proba(self, X):
         """
-        Retorna la probabilitat de cada classe. 
-        Necessari per calcular la confiança (entropia) en el Cascading.
+        Returns the probability of each class. 
+        Required to calculate confidence (entropy) in Cascading.
         """
         pass
 
     @abstractmethod
     def get_model_size(self):
-        """Retorna el tamany del model en bytes (aprox)."""
+        """Returns the model size in bytes (approx)."""
         pass

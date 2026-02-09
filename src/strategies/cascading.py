@@ -5,7 +5,7 @@ from ..energy import EnergyMeter
 class GreenCascading:
     COSTS = {
         "Tiny": 0.0539 / 10000,    # DTree:  0.00000539 J
-        "Medium": 0.0550 / 10000,  # RForest: 0.00000550 J (Empat tècnic amb Tiny!)
+        "Medium": 0.0550 / 10000,  # RForest: 0.00000550 J (Technical tie with Tiny!)
         "Small": 0.1260 / 10000,   # LogReg: 0.00001260 J
         "Large": 0.4192 / 10000,   # MLP:    0.00004192 J
         "Extra": 1.4224 / 10000    # CNN:    0.00014224 J
@@ -13,12 +13,12 @@ class GreenCascading:
 
     def __init__(self, models_list, thresholds):
         """
-        :param models_list: Llista d'objectes model JA ENTRENATS.
+        :param models_list: List of ALREADY TRAINED model objects.
             - Ex: [TinyModel(), SmallModel(), MediumModel(), LargeModel()]
-            - Han de ser instàncies de SklearnBase o KerasBase.
-            - L'ordre és important: del més lleuger al més pesat.
-        :param thresholds: Llista de valors (0 a 1) per decidir si parem.
-                           Ex: [0.9, 0.8, 0.0] -> L'últim ha de ser 0 per assegurar resposta.
+            - Must be instances of SklearnBase or KerasBase.
+            - Order is important: from lightest to heaviest.
+        :param thresholds: List of values (0 to 1) to decide if we stop.
+                           Ex: [0.9, 0.8, 0.0] -> Last must be 0 to ensure response.
         """
         self.models = models_list
         self.thresholds = thresholds
@@ -26,8 +26,8 @@ class GreenCascading:
 
     def predict_sample(self, x_flat, x_img):
         """
-        Fa la predicció per a UNA sola mostra.
-        Retorna: (predicció, cost_acumulat, index_model_final)
+        Makes prediction for ONE single sample.
+        Returns: (prediction, accumulated_cost, final_model_index)
         """
         total_energy = 0.0
         
@@ -53,15 +53,15 @@ class GreenCascading:
 
     def evaluate(self, X_flat, X_img, y_true):
         """
-        Avalua tot el dataset de test simulant la cascada.
+        Evaluates the entire test dataset simulating the cascade.
         """
         correct = 0
         total_energy = 0.0
-        model_counts = np.zeros(len(self.models)) # Per saber quin model treballa més
+        model_counts = np.zeros(len(self.models)) # To know which model works most
         
-        print(f"🌊 Iniciant Cascada amb llindars: {self.thresholds}...")
+        print(f"🌊 Starting Cascade with thresholds: {self.thresholds}...")
         
-        # Avaluem mostra a mostra (simulació realista de flux d'entrada)
+        # Evaluate sample by sample (realistic simulation of input flow)
         n_samples = len(y_true)
         for idx in range(n_samples):
             if idx % 1000 == 0: print(f"({idx})", end="", flush=True)

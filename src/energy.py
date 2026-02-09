@@ -3,19 +3,19 @@ import os
 
 class EnergyMeter:
     """
-    Un Context Manager per mesurar l'energia d'un bloc de codi.
-    Ús:
+    A Context Manager to measure the energy of a code block.
+    Usage:
         with EnergyMeter() as meter:
             model.predict(X)
         print(meter.energy_kwh)
     """
     def __init__(self, project_name="green_ai_replica"):
-        # Guardem els logs en una carpeta temp per no molestar
+        # Store logs in a temp folder to avoid clutter
         os.makedirs("./logs_energy", exist_ok=True)
         self.tracker = EmissionsTracker(
             project_name=project_name, 
             output_dir="./logs_energy",
-            log_level="error",  # Perquè no ompli la consola de text
+            log_level="error",  # To avoid filling the console with text
             save_to_file=True
         )
         self.energy_kwh = 0.0
@@ -26,6 +26,6 @@ class EnergyMeter:
 
     def __exit__(self, exc_type, exc_value, traceback):
         emissions = self.tracker.stop()
-        # CodeCarbon retorna emissions, però internament guarda l'energia
-        # L'energia total consumida en kWh (funció interna de la llibreria)
+        # CodeCarbon returns emissions, but internally stores energy
+        # Total energy consumed in kWh (internal function of the library)
         self.energy_kwh = self.tracker._total_energy.kWh

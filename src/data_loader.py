@@ -9,7 +9,7 @@ class DataLoader:
         self._load_and_split()
 
     def _load_and_split(self):
-        print("📥 Descarregant Fashion-MNIST...")
+        print("📥 Downloading Fashion-MNIST...")
 
         (X_train_full, y_train_full), (self.X_test, self.y_test) = tf.keras.datasets.fashion_mnist.load_data()
 
@@ -24,25 +24,25 @@ class DataLoader:
             stratify=y_train_full
         )
         
-        print(f"✅ Dades carregades: Train={self.X_train.shape}, Val={self.X_val.shape}, Test={self.X_test.shape}")
+        print(f"✅ Data loaded: Train={self.X_train.shape}, Val={self.X_val.shape}, Test={self.X_test.shape}")
 
     def get_data(self, flatten=False):
         """
-        Retorna (X_train, y_train), (X_val, y_val), (X_test, y_test).
+        Returns (X_train, y_train), (X_val, y_val), (X_test, y_test).
         
-        :param flatten: Si és True, converteix les imatges 28x28 a vectors de 784.
-                        (Necessari per a Sklearn models com Arbres o Random Forest).
-                        (Fals per a CNNs).
+        :param flatten: If True, converts 28x28 images to 784 vectors.
+                        (Required for Sklearn models like Trees or Random Forest).
+                        (False for CNNs).
         """
         if flatten:
-            # Aplanem les imatges: (N, 28, 28) -> (N, 784)
+            # Flatten images: (N, 28, 28) -> (N, 784)
             X_train_flat = self.X_train.reshape(self.X_train.shape[0], -1)
             X_val_flat = self.X_val.reshape(self.X_val.shape[0], -1)
             X_test_flat = self.X_test.reshape(self.X_test.shape[0], -1)
             return (X_train_flat, self.y_train), (X_val_flat, self.y_val), (X_test_flat, self.y_test)
         
-        # Si no, retornem imatges 28x28 (per a CNNs)
-        # Afegim una dimensió extra pel canal de color (N, 28, 28, 1) que Keras necessita
+        # Otherwise, return 28x28 images (for CNNs)
+        # Add extra dimension for color channel (N, 28, 28, 1) that Keras needs
         X_train_exp = np.expand_dims(self.X_train, -1)
         X_val_exp = np.expand_dims(self.X_val, -1)
         X_test_exp = np.expand_dims(self.X_test, -1)

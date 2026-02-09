@@ -29,10 +29,10 @@ class GreenRouter:
         else:
             x_in = x_img.reshape(1, 28, 28, 1)
             
-        # Fem servir predict (no cal proba aquí, confiem en el router)
+        # Use predict (no need for proba here, we trust the router)
         prediction = selected_model.predict(x_in)[0]
         
-        # 3. Calculem Energia: Peatge del Router + Cost del Model
+        # 3. Calculate Energy: Router toll + Model cost
         model_key = selected_model.name.split()[0]
         step_cost = self.COSTS.get(model_key, 0.0001)
         
@@ -43,10 +43,10 @@ class GreenRouter:
     def evaluate(self, X_flat, X_img, y_true):
         correct = 0
         total_energy = 0.0
-        # Comptador per veure on envia les coses
+        # Counter to see where samples are routed
         model_counts = np.zeros(len(self.models)) 
         
-        print("🚀 Executant Router sobre Test Set...")
+        print("🚀 Running Router on Test Set...")
         for i in range(len(y_true)):
             pred, en, idx = self.predict_sample(X_flat[i], X_img[i])
             
