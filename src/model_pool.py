@@ -41,11 +41,11 @@ class KerasBase(GreenModel):
         self.model.fit(X, y, epochs=self.epochs, batch_size=self.batch_size, verbose=0)
 
     def predict(self, X):
-        probs = self.model.predict(X, verbose=0)
+        probs = self.model(X, training=False).numpy()
         return np.argmax(probs, axis=1)
 
     def predict_proba(self, X):
-        return self.model.predict(X, verbose=0)
+        return self.model(X, training=False).numpy()
 
     def get_model_size(self):
         # Comptem paràmetres * 4 bytes (float32)
