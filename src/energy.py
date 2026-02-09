@@ -11,10 +11,10 @@ class EnergyMeter:
     """
     def __init__(self, project_name="green_ai_replica"):
         # Store logs in a temp folder to avoid clutter
-        os.makedirs("./logs_energy", exist_ok=True)
+        os.makedirs("./logs", exist_ok=True)
         self.tracker = EmissionsTracker(
             project_name=project_name, 
-            output_dir="./logs_energy",
+            output_dir="./logs",
             log_level="error",  # To avoid filling the console with text
             save_to_file=True
         )
@@ -26,6 +26,4 @@ class EnergyMeter:
 
     def __exit__(self, exc_type, exc_value, traceback):
         emissions = self.tracker.stop()
-        # CodeCarbon returns emissions, but internally stores energy
-        # Total energy consumed in kWh (internal function of the library)
         self.energy_kwh = self.tracker._total_energy.kWh

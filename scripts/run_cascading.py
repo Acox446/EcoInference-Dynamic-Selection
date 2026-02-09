@@ -1,17 +1,23 @@
-import pickle
 import os
+import sys
+import pickle
 import numpy as np
+
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.data_loader import DataLoader
 from src.strategies.cascading import GreenCascading
+from src.config import get_active_models, get_cascading_thresholds, get_paths
 
-# Carregar models guardats
 def load_models():
     models = []
-    names = ["Tiny", "Medium", "Large", "Extra"] 
+    names = get_active_models()
+    models_dir = get_paths()["models_dir"]
     
     print("📂 Carregant models...")
     for name in names:
-        path = f"saved_models/{name}.pkl"
+        path = f"{models_dir}/{name}.pkl"
         if not os.path.exists(path):
             print(f"❌ Error: No trobo {path}")
             continue
@@ -31,19 +37,13 @@ def main():
 
     models = load_models()
 
-    # 2. Definir Estratègia (Llindars)
-    # Provem una configuració agressiva
-    # Si l'Arbre té 90% seguretat -> Acceptem.
-    # Si RF té 80% seguretat -> Acceptem.
-    # ...
-    thresholds = [0.9, 0.8, 0.7, 0.0]  # 4 thresholds per 4 models 
+   
+    thresholds = get_cascading_thresholds() 
     
     cascade = GreenCascading(models, thresholds)
 
-    # 3. Executar
     acc, avg_energy, counts = cascade.evaluate(X_test_flat, X_test_img, y_test)
 
-    # 4. Resultats
     print("\n\n=== RESULTATS CASCADA ===")
     print(f"Precisió Global: {acc:.4f}")
     print(f"Energia Mitjana/Mostra: {avg_energy:.6f} Joules")

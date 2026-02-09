@@ -1,0 +1,33 @@
+# Model configurations for EcoInference
+# Energy costs measured in Joules per sample
+
+energy_costs:
+  Tiny: 0.00000539      # Decision Tree
+  Small: 0.00001260     # Logistic Regression
+  Medium: 0.00000550    # Random Forest
+  Large: 0.00004192     # MLP
+  Extra: 0.00014224     # CNN
+
+router:
+  cost: 0.00001040      # Router inference cost (0.124840 / 12000)
+  max_iter: 1000
+  class_weight: "balanced"
+
+# Model hyperparameters
+model_params:
+  tiny:
+    max_depth: 5
+  small:
+    max_iter: 1000
+  medium:
+    n_estimators: 20
+    max_depth: 10
+  large:
+    epochs: 5
+    batch_size: 64
+    hidden_units: 128
+  extra:
+    epochs: 5
+    batch_size: 64
+    conv_filters: [32, 64]
+    dense_units: 64

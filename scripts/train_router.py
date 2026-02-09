@@ -1,23 +1,30 @@
-import numpy as np
 import os
+import sys
+import numpy as np
 import pickle
+
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from sklearn.linear_model import LogisticRegression
 from src.data_loader import DataLoader
 from src.model_pool import SklearnBase
 from src.energy import EnergyMeter
-
-MODELS_TO_USE = ["Tiny", "Medium", "Large", "Extra"] 
+from src.config import get_active_models, get_paths, get_models_config
 
 def load_models():
     models = []
+    models_to_use = get_active_models()
+    models_dir = get_paths()["models_dir"]
+    
     print("📂 Loading models...")
-    for name in MODELS_TO_USE:
-        path = f"saved_models/{name}.pkl"
+    for name in models_to_use:
+        path = f"{models_dir}/{name}.pkl"
         if not os.path.exists(path):
             found = False
-            for f in os.listdir("saved_models"):
+            for f in os.listdir(models_dir):
                 if f.startswith(name) and f.endswith(".pkl"):
-                    path = os.path.join("saved_models", f)
+                    path = os.path.join(models_dir, f)
                     found = True
                     break
             if not found:
@@ -63,7 +70,11 @@ def main():
     print(f"   Labels generated. Ideal distribution: {np.bincount(router_labels)}")
 
     print("🧠 Training Router (Logistic Regression)...")
-    router = LogisticRegression(max_iter=1000, class_weight='balanced') 
+    router_config = get_models_config()["router"]
+    router = LogisticRegression(
+        max_iter=router_config["max_iter"],
+        class_weight=router_config["class_weight"]
+    ) 
     router.fit(X_val_flat, router_labels)
     
     print("⚡️ Measuring Inference Energy...")
@@ -78,9 +89,10 @@ def main():
     print(f"🔌 Energy: {energy_joules:.6f} Joules")
     print(f"✅ Router trained! Accuracy on decisions: {accuracy:.3f}")
     
-    with open("saved_models/router.pkl", "wb") as f:
+    router_path = get_paths()["router_path"]
+    with open(router_path, "wb") as f:
         pickle.dump(router, f)
-    print("💾 Saved to saved_models/router.pkl")
+    print(f"💾 Saved to {router_path}")
 
 if __name__ == "__main__":
     main()

@@ -1,20 +1,27 @@
-import pickle
 import os
+import sys
+import pickle
 import numpy as np
+
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.data_loader import DataLoader
 from src.strategies.routing import GreenRouter
-
-MODELS_TO_USE = ["Tiny", "Medium", "Large", "Extra"]
+from src.config import get_active_models, get_paths
 
 def load_models():
     models = []
+    models_to_use = get_active_models()
+    models_dir = get_paths()["models_dir"]
+    
     print("📂 Carregant models...")
-    for name in MODELS_TO_USE:
-        path = f"saved_models/{name}.pkl"
+    for name in models_to_use:
+        path = f"{models_dir}/{name}.pkl"
         if not os.path.exists(path):
-            for f in os.listdir("saved_models"):
+            for f in os.listdir(models_dir):
                 if f.startswith(name) and f.endswith(".pkl"):
-                    path = os.path.join("saved_models", f)
+                    path = os.path.join(models_dir, f)
                     break
         with open(path, "rb") as f:
             models.append(pickle.load(f))

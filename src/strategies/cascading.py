@@ -1,15 +1,10 @@
 import numpy as np
 from ..model_pool import SklearnBase, KerasBase
 from ..energy import EnergyMeter
+from ..config import get_energy_costs
 
 class GreenCascading:
-    COSTS = {
-        "Tiny": 0.0539 / 10000,    # DTree:  0.00000539 J
-        "Medium": 0.0550 / 10000,  # RForest: 0.00000550 J (Technical tie with Tiny!)
-        "Small": 0.1260 / 10000,   # LogReg: 0.00001260 J
-        "Large": 0.4192 / 10000,   # MLP:    0.00004192 J
-        "Extra": 1.4224 / 10000    # CNN:    0.00014224 J
-    }
+    COSTS = get_energy_costs()
 
     def __init__(self, models_list, thresholds):
         """

@@ -1,20 +1,19 @@
 import numpy as np
 import pickle
 from ..model_pool import SklearnBase
+from ..config import get_energy_costs, get_models_config, get_paths
 
 class GreenRouter:
-    def __init__(self, models_list, router_path="saved_models/router.pkl"):
+    def __init__(self, models_list, router_path=None):
         self.models = models_list
+        
+        if router_path is None:
+            router_path = get_paths()["router_path"]
         with open(router_path, "rb") as f:
             self.router = pickle.load(f)
             
-        self.COSTS = {
-            "Tiny": 0.0539 / 10000,   
-            "Medium": 0.0550 / 10000, 
-            "Large": 0.4192 / 10000,  
-            "Extra": 1.4224 / 10000   
-        }
-        self.ROUTER_COST = 0.124840 / 12000
+        self.COSTS = get_energy_costs()
+        self.ROUTER_COST = get_models_config()["router"]["cost"]
 
     def predict_sample(self, x_flat, x_img):
         decision_idx = self.router.predict(x_flat.reshape(1, -1))[0]
