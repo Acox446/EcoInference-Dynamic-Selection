@@ -68,7 +68,7 @@ def main():
         router_labels.append(best_model_idx)
 
     print(f"   Labels generated. Ideal distribution: {np.bincount(router_labels)}")
-
+    # TODO: Canviar a decision tree.
     print("🧠 Training Router (Logistic Regression)...")
     router_config = get_models_config()["router"]
     router = LogisticRegression(

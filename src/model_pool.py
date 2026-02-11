@@ -68,6 +68,7 @@ class MediumModel(SklearnBase):
     def __init__(self):
         super().__init__(RandomForestClassifier(n_estimators=20, max_depth=10), "Medium (RForest)")
 
+# TODO: Canviar a pytorch
 # 4. LARGE: MLP (Simple Neural Network)
 class LargeModel(KerasBase):
     def __init__(self, input_shape=(28, 28, 1)):

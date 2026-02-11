@@ -1,6 +1,6 @@
 from codecarbon import EmissionsTracker
 import os
-
+# TODO: canviar a singleton 
 class EnergyMeter:
     """
     A Context Manager to measure the energy of a code block.

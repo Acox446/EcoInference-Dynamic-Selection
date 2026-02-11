@@ -10,6 +10,7 @@ class DataLoader:
 
     def _load_and_split(self):
         print("📥 Downloading Fashion-MNIST...")
+        #TODO: Normalitzar les dades (0-1) i convertir a float32
 
         (X_train_full, y_train_full), (self.X_test, self.y_test) = tf.keras.datasets.fashion_mnist.load_data()
 
