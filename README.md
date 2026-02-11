@@ -189,22 +189,6 @@ model_params:
   # ...
 ```
 
-## Experimental Results
-
-### Individual Model Performance
-
-| Model | Accuracy | Energy (Joules) |
-|-------|----------|-----------------|
-| Tiny (Decision Tree) | 69.54% | 0.096 |
-| Small (Logistic Regression) | 83.98% | 0.183 |
-| Medium (Random Forest) | 83.77% | 0.086 |
-| Large (MLP) | 87.01% | 0.085 |
-| Extra Large (CNN) | 89.61% | 2.632 |
-
-### Strategy Comparison
-
-The dynamic strategies achieve competitive accuracy while significantly reducing average energy consumption compared to always using the largest model.
-
 ## Dataset
 
 This implementation uses **Fashion-MNIST**, a dataset of Zalando's article images:
