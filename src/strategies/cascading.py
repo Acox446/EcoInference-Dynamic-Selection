@@ -54,7 +54,7 @@ class GreenCascading:
         total_energy = 0.0
         model_counts = np.zeros(len(self.models)) # To know which model works most
         
-        print(f"🌊 Starting Cascade with thresholds: {self.thresholds}...")
+        print(f"Starting Cascade with thresholds: {self.thresholds}...")
         
         # Evaluate sample by sample (realistic simulation of input flow)
         n_samples = len(y_true)

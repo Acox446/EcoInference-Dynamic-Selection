@@ -15,17 +15,17 @@ def load_models():
     names = get_active_models()
     models_dir = get_paths()["models_dir"]
     
-    print("📂 Carregant models...")
+    print("Loading models...")
     for name in names:
         path = f"{models_dir}/{name}.pkl"
         if not os.path.exists(path):
-            print(f"❌ Error: No trobo {path}")
+            print(f"Error: Model not found at {path}")
             continue
             
         with open(path, "rb") as f:
             model = pickle.load(f)
             models.append(model)
-            print(f"   Model carregat: {model.name}")
+            print(f"   Model loaded: {model.name}")
     return models
 
 def main():
@@ -44,13 +44,13 @@ def main():
 
     acc, avg_energy, counts = cascade.evaluate(X_test_flat, X_test_img, y_test)
 
-    print("\n\n=== RESULTATS CASCADA ===")
-    print(f"Precisió Global: {acc:.4f}")
-    print(f"Energia Mitjana/Mostra: {avg_energy:.6f} Joules")
-    print("Distribució d'ús de models:")
+    print("\n\n=== CASCADE RESULTS ===")
+    print(f"Overall Accuracy: {acc:.4f}")
+    print(f"Average Energy per Sample: {avg_energy:.6f} Joules")
+    print("Model Usage Distribution:")
     for i, model in enumerate(models):
         perc = (counts[i] / len(y_test)) * 100
-        print(f"  - {model.name}: {counts[i]} vegades ({perc:.1f}%)")
+        print(f"  - {model.name}: {counts[i]} times ({perc:.1f}%)")
 
 if __name__ == "__main__":
     main()

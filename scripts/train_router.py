@@ -17,7 +17,7 @@ def load_models():
     models_to_use = get_active_models()
     models_dir = get_paths()["models_dir"]
     
-    print("📂 Loading models...")
+    print("Loading models...")
     for name in models_to_use:
         path = f"{models_dir}/{name}.pkl"
         if not os.path.exists(path):
@@ -28,7 +28,7 @@ def load_models():
                     found = True
                     break
             if not found:
-                print(f"❌ ERROR: Model {name} not found")
+                print(f"ERROR: Model {name} not found")
                 continue
         
         with open(path, "rb") as f:
@@ -42,7 +42,7 @@ def main():
 
     models = load_models()
     
-    print("🔮 Generating optimal labels (Oracle)...")
+    print("Generating optimal labels (Oracle)...")
     router_labels = []
     
     for i in range(len(y_val)):
@@ -69,7 +69,7 @@ def main():
 
     print(f"   Labels generated. Ideal distribution: {np.bincount(router_labels)}")
     # TODO: Canviar a decision tree.
-    print("🧠 Training Router (Logistic Regression)...")
+    print("Training Router (Logistic Regression)...")
     router_config = get_models_config()["router"]
     router = LogisticRegression(
         max_iter=router_config["max_iter"],
@@ -77,7 +77,7 @@ def main():
     ) 
     router.fit(X_val_flat, router_labels)
     
-    print("⚡️ Measuring Inference Energy...")
+    print("Measuring Inference Energy...")
     with EnergyMeter() as meter:
         preds = router.predict(X_val_flat)
     
@@ -86,13 +86,13 @@ def main():
     # Convert to Joules for readability (1 kWh = 3.6e6 Joules)
     energy_joules = energy_kwh * 3.6e6 
 
-    print(f"🔌 Energy: {energy_joules:.6f} Joules")
-    print(f"✅ Router trained! Accuracy on decisions: {accuracy:.3f}")
+    print(f"Energy: {energy_joules:.6f} Joules")
+    print(f"Router trained! Accuracy on decisions: {accuracy:.3f}")
     
     router_path = get_paths()["router_path"]
     with open(router_path, "wb") as f:
         pickle.dump(router, f)
-    print(f"💾 Saved to {router_path}")
+    print(f"Saved to {router_path}")
 
 if __name__ == "__main__":
     main()

@@ -15,7 +15,7 @@ def load_models():
     models_to_use = get_active_models()
     models_dir = get_paths()["models_dir"]
     
-    print("📂 Carregant models...")
+    print("Loading models...")
     for name in models_to_use:
         path = f"{models_dir}/{name}.pkl"
         if not os.path.exists(path):
@@ -37,9 +37,9 @@ def main():
     
     acc, energy, counts = router_strat.evaluate(X_test, X_img, y_test)
     
-    print("\n=== RESULTATS ROUTER ===")
-    print(f"Precisió: {acc:.4f}")
-    print(f"Energia:  {energy:.6f} J/mostra")
+    print("\n=== ROUTER RESULTS ===")
+    print(f"Accuracy: {acc:.4f}")
+    print(f"Energy:  {energy:.6f} J/sample")
     print("Decisions:")
     for i, m in enumerate(models):
         print(f"  -> {m.name}: {int(counts[i])} ({counts[i]/len(y_test)*100:.1f}%)")

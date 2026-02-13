@@ -9,11 +9,11 @@ class DataLoader:
         self._load_and_split()
 
     def _load_and_split(self):
-        print("📥 Downloading Fashion-MNIST...")
-        #TODO: Normalitzar les dades (0-1) i convertir a float32
+        print("Downloading Fashion-MNIST...")
 
         (X_train_full, y_train_full), (self.X_test, self.y_test) = tf.keras.datasets.fashion_mnist.load_data()
-
+        
+        # The pixel values are in [0, 255]. Normalize to [0, 1] for better training.
         X_train_full = X_train_full.astype('float32') / 255.0
         self.X_test = self.X_test.astype('float32') / 255.0
 
@@ -25,7 +25,7 @@ class DataLoader:
             stratify=y_train_full
         )
         
-        print(f"✅ Data loaded: Train={self.X_train.shape}, Val={self.X_val.shape}, Test={self.X_test.shape}")
+        print(f"Data loaded: Train={self.X_train.shape}, Val={self.X_val.shape}, Test={self.X_test.shape}")
 
     def get_data(self, flatten=False):
         """

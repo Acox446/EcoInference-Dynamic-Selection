@@ -19,7 +19,7 @@ RESULTS_FILE = "benchmark_results.csv"
 os.makedirs(MODELS_DIR, exist_ok=True)
 
 def main():
-    print("🚀 Iniciant Benchmark Green AI...")
+    print("Starting Green AI Benchmark...")
     
     loader = DataLoader()
     (X_train_flat, y_train), (X_val_flat, y_val), (X_test_flat, y_test) = loader.get_data(flatten=True)
@@ -36,30 +36,30 @@ def main():
     results = []
 
     for model in models_list:
-        print(f"\n--- Processant: {model.name} ---")
+        print(f"\n--- Processing: {model.name} ---")
         
         if isinstance(model, SklearnBase):
             X_t, X_v, X_test_curr = X_train_flat, X_val_flat, X_test_flat
         else:
             X_t, X_v, X_test_curr = X_train_img, X_val_img, X_test_img
 
-        print("   🏋️  Entrenant...")
+        print("     Training...")
         start_time = time.time()
         model.fit(X_t, y_train)
         train_time = time.time() - start_time
-        print(f"      Entrenat en {train_time:.2f}s")
+        print(f"      Trained in {train_time:.2f}s")
 
-        print("   ⚡ Mesurant Energia d'Inferència...")
+        print("     Measuring Inference Energy...")
         with EnergyMeter() as meter:
             preds = model.predict(X_test_curr)
         
         accuracy = (preds == y_test).mean()
         energy_kwh = meter.energy_kwh
-        # Convertim a Joules per llegibilitat (1 kWh = 3.6e6 Joules)
+        # Convert to Joules for readability (1 kWh = 3.6e6 Joules)
         energy_joules = energy_kwh * 3.6e6 
 
-        print(f"      Precisió: {accuracy:.4f}")
-        print(f"      Energia: {energy_joules:.6f} Joules")
+        print(f"      Accuracy: {accuracy:.4f}")
+        print(f"      Energy: {energy_joules:.6f} Joules")
 
         results.append({
             "Model": model.name,
@@ -80,18 +80,18 @@ def main():
     df = pd.DataFrame(results)
     df.to_csv(RESULTS_FILE, index=False)
     
-    print("\n\n📊 RÀNQUING FINAL:")
+    print("\n\nFINAL RANKING:")
     print(df[["Model", "Accuracy", "Energy_Joules"]].sort_values("Accuracy"))
 
-    # 4. Gràfic ràpid
+    # 4. Quick Plot
     plt.figure(figsize=(10, 6))
     sns.scatterplot(data=df, x="Energy_Joules", y="Accuracy", s=100, hue="Model")
-    plt.title("Trade-off: Precisió vs Consum Energètic")
-    plt.xlabel("Energia Consumida (Joules) - Menys és millor")
-    plt.ylabel("Precisió (0-1) - Més és millor")
+    plt.title("Trade-off: Accuracy vs Energy Consumption")
+    plt.xlabel("Energy Consumed (Joules) - Lower is better")
+    plt.ylabel("Accuracy (0-1) - Higher is better")
     plt.grid(True)
     plt.savefig("benchmark_plot.png")
-    print("\n✅ Gràfic guardat a 'benchmark_plot.png'")
+    print("\nPlot saved to 'benchmark_plot.png'")
 
 if __name__ == "__main__":
     main()

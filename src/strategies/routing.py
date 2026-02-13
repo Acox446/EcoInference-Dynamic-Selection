@@ -45,7 +45,7 @@ class GreenRouter:
         # Counter to see where samples are routed
         model_counts = np.zeros(len(self.models)) 
         
-        print("🚀 Running Router on Test Set...")
+        print("Running Router on Test Set...")
         for i in range(len(y_true)):
             pred, en, idx = self.predict_sample(X_flat[i], X_img[i])
             
